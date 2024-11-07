@@ -15,7 +15,7 @@ import java.util.Scanner;
 public class Renamer {
 
 	public static void main(String[] args) throws Exception {
-		String tmpsrc = "/home/zirsky/Desktop/Texts";
+		String tmpsrc = "/home/zirsky/Temporary/Texts_Main";
 		String tmpdst = "/home/zirsky/Temporary/Texts";
 		SourceDest srcDst = new SourceDest(tmpsrc,tmpdst);
 		promptCopy(srcDst);
@@ -49,11 +49,14 @@ public class Renamer {
 				System.out.print("Enter [Y/n]: ");
 				input = sc.nextLine();
 				if (input.charAt(0) == 'Y' || input.charAt(0) == 'y') {
-					System.out.println("What would you like to rename it to :\n  > ");
+					System.out.print("What would you like to rename it to :\n  > ");
 					name = sc.nextLine();
+					if (!newNameCheck(name))
+						name = name.concat(".pdf");
 					Files.copy(file.toPath(), getNewPath(file,srcDst.source,srcDst.dest,name));
-				} else { name = file.getName();}
-				Files.copy(file.toPath(), getNewPath(file,srcDst.source,srcDst.dest));
+				} else { name = file.getName();
+					Files.copy(file.toPath(), getNewPath(file,srcDst.source,srcDst.dest));
+				}
 			}
 			System.out.println("\n\n");
 		} 
@@ -94,5 +97,8 @@ public class Renamer {
 		if (index == -1)
 			return false;
 		return (match.equalsIgnoreCase(fileName.substring(index)));
+	}
+	private static boolean newNameCheck(String name) {
+		return name.contains(".pdf");
 	}
 }
